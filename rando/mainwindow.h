@@ -9,9 +9,11 @@
 #include <QLabel>
 #include <QLayout>
 #include <QResizeEvent>
+#include <QVector>
 #include <iostream>
 
 #include "addrando.h"
+#include "randonnee.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,13 +23,11 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 private :
-    QPushButton * _buttonQuit, * _buttonAddRando, * _buttonAddEtape, * _buttonDelRando, *_buttonDelEtape;
-    QComboBox * _comboListRando;
-    QTextEdit * _textRando;
-    QLabel * _labelComboBox;
-    QWidget * _widgetBouton;
-    QVBoxLayout * _vLayout;
-    QString * _currentRando;
+    QTextEdit _textRando;
+    QWidget _widgetBouton;
+    int _currentRando;
+
+    QVector<Randonnee> _randonnees;
 
 
 private slots:
@@ -36,7 +36,7 @@ private slots:
     void addEtape();
     void delRando();
     void delEtape();
-    void comboBoxChanged(QString text);
+    void comboBoxChanged(int text);
 
 protected:
     void resizeEvent ( QResizeEvent * event );

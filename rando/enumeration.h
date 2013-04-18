@@ -19,6 +19,7 @@ enum Epoque
 
 enum TypeTerrain
 {
+    NONE_TERRAIN,
     ZONE_AGRICOLE,
     EBOULIS,
     PENTE_D_HERBE,
@@ -27,6 +28,7 @@ enum TypeTerrain
 
 enum TypeChemin
 {
+    NONE_CHEMIN,
     CHEMIN_GOUDRONNE,
     CHEMIN_DE_TERRE,
     SENTIER_BALISE,

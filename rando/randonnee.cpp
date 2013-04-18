@@ -5,6 +5,14 @@ Randonnee::Randonnee()
     _epo = new Epoque[4];
     _terrain = new TypeTerrain[4];
     _chemin = new TypeChemin[5];
+    _nom = "";
+}
+
+Randonnee::~Randonnee()
+{
+    delete _epo;
+    delete _terrain;
+    delete _chemin;
 }
 
 //Introduction

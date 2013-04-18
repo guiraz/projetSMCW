@@ -8,6 +8,7 @@ class Randonnee
 {
 public:
     Randonnee();
+    ~Randonnee();
 
     void setNom(QString nom);
     void setSituation(QString situation);
