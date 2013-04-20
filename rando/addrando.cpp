@@ -1,107 +1,89 @@
 #include "addrando.h"
 
-AddRando::AddRando(QWidget *parent) :
-    QDialog(parent)
+AddRando::AddRando(QVector<Randonnee> * rand ,QWidget *parent) :
+    QDialog(parent), _rand(rand)
 {
-    this->setFixedSize(1024,768);
-    this->setWindowTitle("Edition de la randonnée");
-    this->setStyleSheet(".AddRando{background-color : grey;}");
+    this->setMinimumSize(640,640);
+    _scrollArea = new QScrollArea();
+    _scrollArea->setAttribute(Qt::WA_DeleteOnClose);
+    _scrollArea->setWidget(this);
+    _scrollArea->show();
 
-    ////////////////
-    //INTRODUCTION//
-    ////////////////
+    _labels.clear();
+    _labels.append(new QLabel("Nom :"));
+    _labels.append(new QLabel("Situation :"));
+    _labels.append(new QLabel("Prelude :"));
+    _labels.append(new QLabel("Descritpion générale :"));
+    _labels.append(new QLabel("Descritpion culturelle :"));
+    _labels.append(new QLabel("Infos :"));
+    _labels.append(new QLabel("Recommandations :"));
+    _labels.append(new QLabel("Difficulte :"));
+    _labels.append(new QLabel("Epoque :"));
+    _labels.append(new QLabel("Depart :"));
+    _labels.append(new QLabel("Arrivé :"));
+    _labels.append(new QLabel("Carte :"));
+    _labels.append(new QLabel("Carroyage :"));
+    _labels.append(new QLabel("Nom carte :"));
+    _labels.append(new QLabel("Acces :"));
+    _labels.append(new QLabel("Parking :"));
+    _labels.append(new QLabel("Type de chemin :"));
+    _labels.append(new QLabel("Type de terrain :"));
+    _labels.append(new QLabel("Materiel :"));
 
-    _labelNom.setText("Nom de la randonnée :");
-    _labelSituation.setText("Situation de la randonnée :");
-    _labelPrelude.setText("Prelude de la randonnée :");
-    _labelDescGen.setText("Description génèrale de la randonnée :");
+    _lineEdits.clear();
+    for(int i=0; i<_labels.size(); i++)
+        _lineEdits.append(new QLineEdit());
 
-    _vLayout1.addWidget(&_labelNom);
-    _vLayout1.addWidget(&_lineNom);
-    _vLayout1.addWidget(&_labelSituation);
-    _vLayout1.addWidget(&_lineSituation);
-    _vLayout1.addWidget(&_labelPrelude);
-    _vLayout1.addWidget(&_linePrelude);
-    _vLayout1.addWidget(&_labelDescGen);
-    _vLayout1.addWidget(&_lineDescGen);
+    _layout = new QGridLayout();
+    this->setLayout(_layout);
 
-    _intro.setParent(this);
-    _intro.setLayout(&_vLayout1);
-    _intro.setGeometry(3,3,506,278);
-    _intro.setStyleSheet(".QWidget{background-color : black;} QLabel{color : white;}");
 
-    ///////////////////
-    //FICHE TECHNIQUE//
-    ///////////////////
+    for(int i=0; i<_labels.size(); i++)
+    {
+        _layout->addWidget(_labels.at(i),i,0);
+        _layout->addWidget(_lineEdits.at(i),i,1);
+    }
 
-    _labelInfos.setText("Informations sur la randonnée :");
-    _labelDiff.setText("Difficulté :");
-    _labelEpoque.setText("Epoques conseillées :");
-    _labelDepart.setText("Lieu de départ :");
-    _labelArrive.setText("Lieu d'arrivée :");
+    int nbRow = _layout->rowCount();
 
-    _comboDiff.addItem("Facile");
-    _comboDiff.addItem("Moyen");
-    _comboDiff.addItem("Difficile");
+    _buttonOK = new QPushButton("Ok");
+    QObject::connect(_buttonOK, SIGNAL(clicked()), this, SLOT(ok()));
+    _layout->addWidget(_buttonOK,nbRow,0,1,2);
 
-    _comboEpoque1.addItem("None");
-    _comboEpoque1.addItem("Automne");
-    _comboEpoque1.addItem("Hiver");
-    _comboEpoque1.addItem("Pringtemps");
-    _comboEpoque1.addItem("Ete");
-    _comboEpoque2.addItem("None");
-    _comboEpoque2.addItem("Automne");
-    _comboEpoque2.addItem("Hiver");
-    _comboEpoque2.addItem("Pringtemps");
-    _comboEpoque2.addItem("Ete");
-    _comboEpoque3.addItem("None");
-    _comboEpoque3.addItem("Automne");
-    _comboEpoque3.addItem("Hiver");
-    _comboEpoque3.addItem("Pringtemps");
-    _comboEpoque3.addItem("Ete");
-    _comboEpoque4.addItem("None");
-    _comboEpoque4.addItem("Automne");
-    _comboEpoque4.addItem("Hiver");
-    _comboEpoque4.addItem("Pringtemps");
-    _comboEpoque4.addItem("Ete");
-
-    _vLayout2.addWidget(&_labelInfos);
-    _vLayout2.addWidget(&_lineInfos);
-    _vLayout2.addWidget(&_labelDiff);
-    _vLayout2.addWidget(&_comboDiff);
-    _vLayout2.addWidget(&_labelEpoque);
-    _vLayout2.addWidget(&_comboEpoque1);
-    _vLayout2.addWidget(&_comboEpoque2);
-    _vLayout2.addWidget(&_comboEpoque3);
-    _vLayout2.addWidget(&_comboEpoque4);
-    _vLayout2.addWidget(&_labelDepart);
-    _vLayout2.addWidget(&_lineDepart);
-    _vLayout2.addWidget(&_labelArrive);
-    _vLayout2.addWidget(&_lineArrive);
-
-    _ficheTech.setParent(this);
-    _ficheTech.setLayout(&_vLayout2);
-    _ficheTech.setGeometry(3,287,506,478);
-    _ficheTech.setStyleSheet(".QWidget{background-color : black;} QLabel{color : white;}");
-
-    _buttonOK.setText("Ok");
-    _buttonOK.setParent(this);
-    QObject::connect(&_buttonOK, SIGNAL(clicked()), this, SLOT(ok()));
-
-    _buttonAbort.setText("Annuler");
-    _buttonAbort.setParent(this);
-    QObject::connect(&_buttonAbort, SIGNAL(clicked()), this, SLOT(abort()));
+    _buttonAbort = new QPushButton("Annuler");
+    QObject::connect(_buttonAbort, SIGNAL(clicked()), this, SLOT(abort()));
+    _layout->addWidget(_buttonAbort,nbRow+1,0,1,2);
 }
 
 AddRando::~AddRando()
 {
+    delete _buttonOK;
+    delete _buttonAbort;
+    for(int i=0; i<_labels.size(); i++)
+        delete _labels.at(i);
+    _labels.clear();
+    for(int i=0; i<_lineEdits.size(); i++)
+        delete _lineEdits.at(i);
+    _lineEdits.clear();
+    _rand = NULL;
+    delete _rand;
+    delete _layout;
+    _scrollArea->close();
 }
 
 void AddRando::ok()
 {
+    if(verif())
+    {
+    }
 }
 
 void AddRando::abort()
 {
     close();
+}
+
+bool AddRando::verif()
+{
+    return true;
 }

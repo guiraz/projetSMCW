@@ -5,10 +5,12 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QLabel>
 #include <QComboBox>
+#include <QVector>
 #include <iostream>
+#include <QScrollArea>
 
 #include "randonnee.h"
 
@@ -16,23 +18,22 @@ class AddRando : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AddRando(QWidget *parent = 0);
+    explicit AddRando(QVector<Randonnee> * rand ,QWidget *parent = 0);
     ~AddRando();
     
 private:
 
-    QPushButton _buttonOK, _buttonAbort;
+    QVector<Randonnee> * _rand;
 
-    QWidget _intro, _themCult, _ficheTech, _ficheInfos;
-    QVBoxLayout _vLayout1, _vLayout2, _vLayout3, _vLayout4;
+    QPushButton *_buttonOK, *_buttonAbort;
 
-    QLineEdit _lineNom, _lineSituation, _linePrelude, _lineDescGen;
-    QLabel _labelNom, _labelSituation, _labelPrelude, _labelDescGen;
+    QGridLayout *_layout;
+    QScrollArea * _scrollArea;
 
-    QLabel _labelInfos, _labelDiff, _labelEpoque, _labelDepart, _labelArrive;
-    QLineEdit _lineInfos, _lineDepart, _lineArrive;
-    QComboBox _comboDiff, _comboEpoque1, _comboEpoque2, _comboEpoque3, _comboEpoque4;
+    QVector<QLineEdit *> _lineEdits;
+    QVector<QLabel *> _labels;
 
+    bool verif();
 
 private slots:
     void ok();

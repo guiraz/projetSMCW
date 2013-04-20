@@ -4,13 +4,12 @@
 #include <QtGui/QMainWindow>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QComboBox>
 #include <QTextEdit>
-#include <QLabel>
-#include <QLayout>
 #include <QResizeEvent>
+#include <QLayout>
 #include <QVector>
-#include <iostream>
+#include <QLabel>
+#include <QComboBox>
 
 #include "addrando.h"
 #include "randonnee.h"
@@ -22,12 +21,19 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-private :
-    QTextEdit _textRando;
-    QWidget _widgetBouton;
-    int _currentRando;
 
-    QVector<Randonnee> _randonnees;
+private :
+    QTextEdit * _textRando;
+    QWidget * _widgetButton, * _widgetComboLabel;
+    QVBoxLayout * _vLayout1,* _vLayout2;
+
+    QLabel * _label;
+    QComboBox * _combo;
+    QPushButton * _buttonQuit, * _buttonAddRando;
+
+    QVector<Randonnee> _rand;
+
+    int _currentRando;
 
 
 private slots:
