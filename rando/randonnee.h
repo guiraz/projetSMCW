@@ -2,8 +2,6 @@
 #define RANDONNEE_H
 #include <QString>
 
-#include "enumeration.h"
-
 class Randonnee
 {
 public:
@@ -18,18 +16,19 @@ public:
     void setDescCult(QString desc);
 
     void setInfos(QString infos);
+    void setReco(QString reco);
     void setDepart(QString depart);
     void setArrive(QString arrive);
-    void setDiff(Difficulte diff);
-    void setEpoque(Epoque * epoque);
+    void setDiff(QString diff);
+    void setEpoque(QString epoque);
 
     void setnomCarte(QString nomCarte);
     void setCarroyage(QString carroyage);
     void setCarte(QString carte);
     void setAcces(QString acces);
     void setParking(QString parking);
-    void setTerrain(TypeTerrain * terrain);
-    void setChemin(TypeChemin * chemin);
+    void setTerrain(QString terrain);
+    void setChemin(QString chemin);
     void setMateriel(QString materiel);
 
     QString getNom();
@@ -40,18 +39,19 @@ public:
     QString getDescCult();
 
     QString getInfos();
+    QString getReco();
     QString getDepart();
     QString getArrive();
-    Difficulte getDiff();
-    Epoque* getEpoque();
+    QString getDiff();
+    QString getEpoque();
 
     QString getnomCarte();
     QString getCarroyage();
     QString getCarte();
     QString getAcces();
     QString getParking();
-    TypeTerrain* getTerrain();
-    TypeChemin* getChemin();
+    QString getTerrain();
+    QString getChemin();
     QString getMateriel();
 
 private:
@@ -63,8 +63,9 @@ private:
     QString _descCult;
 
     QString _infos;
-    Difficulte _diff;
-    Epoque * _epo;
+    QString _reco;
+    QString _diff;
+    QString _epo;
     QString _depart;
     QString _arrive;
 
@@ -73,8 +74,8 @@ private:
     QString _carte;
     QString _acces;
     QString _parking;
-    TypeTerrain * _terrain;
-    TypeChemin * _chemin;
+    QString _terrain;
+    QString _chemin;
     QString _materiel;
 };
 

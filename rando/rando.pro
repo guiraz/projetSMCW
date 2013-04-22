@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 TARGET = rando
 TEMPLATE = app
@@ -17,8 +17,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     addrando.h \
-    randonnee.h \
-    enumeration.h
+    randonnee.h
 
 DESTDIR = $$_PRO_FILE_PWD_
 

@@ -75,7 +75,30 @@ void AddRando::ok()
 {
     QStringList l = verif();
     if(l.size()==0)
+    {
+        Randonnee temp;
+        temp.setNom(_lineEdits.at(0)->text());
+        temp.setSituation(_lineEdits.at(1)->text());
+        temp.setPrelude(_lineEdits.at(2)->text());
+        temp.setDescGen(_lineEdits.at(3)->text());
+        temp.setDescCult(_lineEdits.at(4)->text());
+        temp.setInfos(_lineEdits.at(5)->text());
+        temp.setReco(_lineEdits.at(6)->text());
+        temp.setDiff(_lineEdits.at(7)->text());
+        temp.setEpoque(_lineEdits.at(8)->text());
+        temp.setDepart(_lineEdits.at(9)->text());
+        temp.setArrive(_lineEdits.at(10)->text());
+        temp.setCarte(_lineEdits.at(11)->text());
+        temp.setCarroyage(_lineEdits.at(12)->text());
+        temp.setnomCarte(_lineEdits.at(13)->text());
+        temp.setAcces(_lineEdits.at(14)->text());
+        temp.setParking(_lineEdits.at(15)->text());
+        temp.setChemin(_lineEdits.at(16)->text());
+        temp.setTerrain(_lineEdits.at(17)->text());
+        temp.setMateriel(_lineEdits.at(18)->text());
+        _rand->append(temp);
         close();
+    }
     else
     {
         QString s;
@@ -271,9 +294,9 @@ QStringList AddRando::verif()
 
 
     t = _lineEdits.at(9)->text();
-    if((t.size()<5) || (t.size()>70))
+    if((t.size()<3) || (t.size()>70))
     {
-        l.append("Le départ doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        l.append("Le départ doit contenir au minimum 3 caractères et au maximum 70 caractères.");
         _lineEdits.at(9)->setStyleSheet("background-color : #FFC0C0;");
     }
     else
@@ -291,9 +314,9 @@ QStringList AddRando::verif()
 
 
     t = _lineEdits.at(10)->text();
-    if((t.size()<5) || (t.size()>70))
+    if((t.size()<3) || (t.size()>70))
     {
-        l.append("L'arrivé doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        l.append("L'arrivé doit contenir au minimum 3 caractères et au maximum 70 caractères.");
         _lineEdits.at(10)->setStyleSheet("background-color : #FFC0C0;");
     }
     else

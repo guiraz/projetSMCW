@@ -2,17 +2,29 @@
 
 Randonnee::Randonnee()
 {
-    _epo = new Epoque[4];
-    _terrain = new TypeTerrain[4];
-    _chemin = new TypeChemin[5];
     _nom = "";
+    _situation = "";
+    _prelude = "";
+    _descGen = "";
+    _descCult = "";
+    _infos = "";
+    _reco = "";
+    _diff = "";
+    _epo = "";
+    _depart = "";
+    _arrive = "";
+    _nomCarte = "";
+    _carroyage = "";
+    _carte = "";
+    _acces = "";
+    _parking = "";
+    _terrain = "";
+    _chemin = "";
+    _materiel = "";
 }
 
 Randonnee::~Randonnee()
 {
-    delete _epo;
-    delete _terrain;
-    delete _chemin;
 }
 
 //Introduction
@@ -48,6 +60,11 @@ void Randonnee::setInfos(QString infos)
     _infos = infos;
 }
 
+void Randonnee::setReco(QString reco)
+{
+    _reco = reco;
+}
+
 void Randonnee::setDepart(QString depart)
 {
     _depart = depart;
@@ -58,15 +75,14 @@ void Randonnee::setArrive(QString arrive)
     _arrive = arrive;
 }
 
-void Randonnee::setDiff(Difficulte diff)
+void Randonnee::setDiff(QString diff)
 {
     _diff = diff;
 }
 
-void Randonnee::setEpoque(Epoque * epoque)
+void Randonnee::setEpoque(QString epoque)
 {
-    for(int i=0; i<4; i++)
-        _epo[i] = epoque[i];
+        _epo = epoque;
 }
 
 //Fiche Informatives
@@ -95,16 +111,14 @@ void Randonnee::setParking(QString parking)
     _parking = parking;
 }
 
-void Randonnee::setTerrain(TypeTerrain * terrain)
+void Randonnee::setTerrain(QString terrain)
 {
-    for(int i=0; i<4; i++)
-        _terrain[i] = terrain[i];
+    _terrain = terrain;
 }
 
-void Randonnee::setChemin(TypeChemin * chemin)
+void Randonnee::setChemin(QString chemin)
 {
-    for(int i=0; i<5; i++)
-        _chemin[i] = chemin[i];
+    _chemin = chemin;
 }
 
 void Randonnee::setMateriel(QString materiel)
@@ -147,6 +161,11 @@ QString Randonnee::getInfos()
     return _infos;
 }
 
+QString Randonnee::getReco()
+{
+    return _reco;
+}
+
 QString Randonnee::getDepart()
 {
     return _depart;
@@ -157,12 +176,12 @@ QString Randonnee::getArrive()
     return _arrive;
 }
 
-Difficulte Randonnee::getDiff()
+QString Randonnee::getDiff()
 {
     return _diff;
 }
 
-Epoque* Randonnee::getEpoque()
+QString Randonnee::getEpoque()
 {
     return _epo;
 }
@@ -193,12 +212,12 @@ QString Randonnee::getParking()
     return _parking;
 }
 
-TypeTerrain* Randonnee::getTerrain()
+QString Randonnee::getTerrain()
 {
     return _terrain;
 }
 
-TypeChemin* Randonnee::getChemin()
+QString Randonnee::getChemin()
 {
     return _chemin;
 }

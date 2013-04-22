@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QLabel>
 #include <QComboBox>
+#include <QtXml>
 
 #include "addrando.h"
 #include "randonnee.h"
@@ -26,14 +27,15 @@ private :
     QTextEdit * _textRando;
     QWidget * _widgetButton, * _widgetComboLabel;
     QVBoxLayout * _vLayout1,* _vLayout2;
-
     QLabel * _label;
     QComboBox * _combo;
     QPushButton * _buttonQuit, * _buttonAddRando;
-
     QVector<Randonnee> _rand;
-
     int _currentRando;
+
+    void update();
+    void writeXML(int index);
+    void loadXMLFile();
 
 
 private slots:
