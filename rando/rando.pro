@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     addrando.cpp \
-    randonnee.cpp
+    randonnee.cpp \
+    etape.cpp
 
 HEADERS  += mainwindow.h \
     addrando.h \
-    randonnee.h
+    randonnee.h \
+    etape.h
 
 DESTDIR = $$_PRO_FILE_PWD_
 

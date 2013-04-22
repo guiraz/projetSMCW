@@ -1,6 +1,9 @@
 #ifndef RANDONNEE_H
 #define RANDONNEE_H
 #include <QString>
+#include <QVector>
+
+#include "etape.h"
 
 class Randonnee
 {
@@ -31,6 +34,10 @@ public:
     void setChemin(QString chemin);
     void setMateriel(QString materiel);
 
+    void setImage(QString image);
+
+    void addEtape(Etape etape);
+
     QString getNom();
     QString getSituation();
     QString getPrelude();
@@ -53,6 +60,10 @@ public:
     QString getTerrain();
     QString getChemin();
     QString getMateriel();
+
+    QString getImage();
+
+    QVector<Etape> * getEtapes();
 
 private:
     QString _nom;
@@ -77,6 +88,10 @@ private:
     QString _terrain;
     QString _chemin;
     QString _materiel;
+
+    QString _image;
+
+    QVector<Etape> _etapes;
 };
 
 #endif // RANDONNEE_H

@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     _label->setStyleSheet("color : white;");
 
     _combo = new QComboBox();
+    QObject::connect(_combo, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxChanged(int)));
     _vLayout2->addWidget(_combo);
 
     _buttonAddRando = new QPushButton("Ajouter Randonnée");
@@ -33,7 +34,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     _rand.clear();
     _rand.reserve(15);
-    loadXMLFile();
+
+    loadRandoFile();
+
     update();
 }
 
@@ -56,9 +59,17 @@ void MainWindow::update()
     _combo->clear();
 
     for(int i=0; i<_rand.size(); i++)
+    {
         _combo->addItem(_rand[i].getNom());
+    }
 
-    _combo->setCurrentIndex(_currentRando);
+    _currentRando = 0;
+
+    if(_rand.size()>0)
+    {
+        _combo->setCurrentIndex(0);
+        _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
+    }
 }
 
 void MainWindow::writeXML(int index)
@@ -181,10 +192,165 @@ void MainWindow::writeXML(int index)
     xml_doc.close();
 }
 
-void MainWindow::loadXMLFile()
+QString MainWindow::loadXMLFile(QString path)
 {
+    QFile xml_doc(path);
+    xml_doc.open(QIODevice::ReadWrite);
+
+    QString s;
+
+    QTextStream stream(&xml_doc);
+
+    s = stream.readAll();
+
+    xml_doc.close();
+
+    return s;
+}
+
+void MainWindow::loadRandoFile()
+{
+    QDirIterator dir(".");
+    while(dir.hasNext())
+    {
+        QString fileName = dir.next();
+        if(fileName.contains(QRegExp(".+\\.xml")))
+        {
+            std::cout<<fileName.toStdString()<<std::endl;
+            QFile file(fileName);
+            if(file.open(QIODevice::ReadWrite))
+            {
+               Randonnee temp;
+               QVector<Etape> etapes;
+               QDomDocument doc("xml_file");
+               doc.setContent(&file);
+               QDomElement docElement = doc.documentElement();
+               QDomNode n = docElement.firstChild();
+               while(!n.isNull())
+               {
+                    QDomElement e = n.toElement();
+                    if(e.tagName()=="introduction")
+                    {
+                        QDomNode introNode = e.firstChild();
+                        while(!introNode.isNull())
+                        {
+                            QDomElement introElement = introNode.toElement();
+
+                            if(introElement.tagName()=="nom")
+                                temp.setNom(introElement.text());
+                            if(introElement.tagName()=="situation")
+                                temp.setSituation(introElement.text());
+                            if(introElement.tagName()=="prelude")
+                                temp.setPrelude(introElement.text());
+                            if(introElement.tagName()=="description_generale")
+                                temp.setDescGen(introElement.text());
+
+                            introNode = introNode.nextSibling();
+                        }
+                    }
+                    if(e.tagName()=="partie")
+                    {
+                        if(e.attribute("titre") == "THEMATIQUE CULTURELLE")
+                        {
+                            QDomNode partieNode = e.firstChild();
+                            while(!partieNode.isNull())
+                            {
+                                QDomElement partieElement = partieNode.toElement();
+
+                                if(partieElement.tagName()=="description_culturel")
+                                    temp.setDescCult(partieElement.text());
+
+                                partieNode = partieNode.nextSibling();
+                            }
+                        }
+                        /*if(e.attribute("titre") == "DESCRIPTION")
+                        {
+                            QDomNode partieNode = e.firstChild();
+                            while(!partieNode.isNull())
+                            {
+                                QDomElement partieElement = partieNode.toElement();
+
+                                if(partieElement.tagName()=="etape")
+                                {
+                                    int index = partieElement.attribute("id").toInt();
+                                    etapes[index].setDescEtape(partieElement.firstChildElement().text());
+                                    etapes[index].setId(partieElement.attribute("id"));
+                                    etapes[index].setNom(partieElement.attribute("nom"));
+                                    etapes[index].setDesc(partieElement.attribute("description"));
+                                    etapes[index].setDistance(partieElement.attribute("distance_a_parcourir"));
+                                    etapes[index].setDuree(partieElement.attribute("duree_estime"));
+                                    etapes[index].setAlt(partieElement.attribute("altitude"));
+                                    etapes[index].setDeniv(partieElement.attribute("denivele"));
+                                    etapes[index].setLat(partieElement.attribute("lat"));
+                                    etapes[index].setLong(partieElement.attribute("long"));
+                                }
+
+                                partieNode = partieNode.nextSibling();
+                            }
+                        }*/
+                    }
+                    if(e.tagName()=="fichetechnique")
+                    {
+                        QDomNode ftNode = e.firstChild();
+                        while(!ftNode.isNull())
+                        {
+                            QDomElement ftElement = ftNode.toElement();
+
+                            if(ftElement.tagName()=="infos")
+                                temp.setInfos(ftElement.text());
+                            if(ftElement.tagName()=="recommandations")
+                                temp.setReco(ftElement.text());
+                            if(ftElement.tagName()=="difficulte")
+                                temp.setDiff(ftElement.text());
+                            if(ftElement.tagName()=="epoque")
+                                temp.setEpoque(ftElement.text());
+                            if(ftElement.tagName()=="depart")
+                                temp.setDepart(ftElement.text());
+                            if(ftElement.tagName()=="arrivee")
+                                temp.setArrive(ftElement.text());
+
+                            ftNode = ftNode.nextSibling();
+                        }
+                    }
+                    if(e.tagName()=="ficheinfo")
+                    {
+                        QDomNode fiNode = e.firstChild();
+                        while(!fiNode.isNull())
+                        {
+                            QDomElement fiElement = fiNode.toElement();
+
+                            if(fiElement.tagName()=="nom")
+                                temp.setnomCarte(fiElement.text());
+                            if(fiElement.tagName()=="acces")
+                                temp.setAcces(fiElement.text());
+                            if(fiElement.tagName()=="parking")
+                                temp.setParking(fiElement.text());
+                            if(fiElement.tagName()=="carte")
+                                temp.setCarte(fiElement.text());
+                            if(fiElement.tagName()=="carroyage")
+                                temp.setCarroyage(fiElement.text());
+                            if(fiElement.tagName()=="typedechemin")
+                                temp.setChemin(fiElement.text());
+                            if(fiElement.tagName()=="typedeterrain")
+                                temp.setTerrain(fiElement.text());
+                            if(fiElement.tagName()=="materiel")
+                                temp.setMateriel(fiElement.text());
+
+                            fiNode = fiNode.nextSibling();
+                        }
+                    }
+                    n = n.nextSibling();
+               }
+               for(int i=0; i<etapes.size(); i++)
+                   temp.addEtape(etapes[i]);
+               _rand.append(temp);
+            }
+        }
+    }
 
 }
+
+
 
 void MainWindow::quit()
 {
@@ -192,33 +358,55 @@ void MainWindow::quit()
         this->close();
 }
 
+
+
 void MainWindow::addRando()
 {
     AddRando * ar;
     ar = new AddRando(&_rand, this);
     ar->exec();
     delete ar;
-
     writeXML(_rand.size()-1);
     update();
 }
+
+
 
 void MainWindow::addEtape()
 {
 }
 
+
+
 void MainWindow::delRando()
 {
+    if(_rand.size()>0)
+    {
+        QFile::remove(_rand[_currentRando].getNom()+".xml");
+        _combo->removeItem(_currentRando);
+        _rand.remove(_currentRando);
+        update();
+    }
 }
+
+
 
 void MainWindow::delEtape()
 {
 }
 
+
+
 void MainWindow::comboBoxChanged(int index)
 {
-    _currentRando = index;
+    if(index>=0)
+    {
+        _currentRando = index;
+        _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
+    }
 }
+
+
 
 void MainWindow::resizeEvent(QResizeEvent * event)
 {

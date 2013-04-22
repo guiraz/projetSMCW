@@ -126,6 +126,16 @@ void Randonnee::setMateriel(QString materiel)
     _materiel = materiel;
 }
 
+void Randonnee::setImage(QString image)
+{
+    _image = image;
+}
+
+void Randonnee::addEtape(Etape etape)
+{
+    _etapes.append(etape);
+}
+
 
 
 //Introduction
@@ -225,4 +235,14 @@ QString Randonnee::getChemin()
 QString Randonnee::getMateriel()
 {
     return _materiel;
+}
+
+QString Randonnee::getImage()
+{
+    return _image;
+}
+
+QVector<Etape> * Randonnee::getEtapes()
+{
+    return &_etapes;
 }

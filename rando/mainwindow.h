@@ -35,7 +35,8 @@ private :
 
     void update();
     void writeXML(int index);
-    void loadXMLFile();
+    QString loadXMLFile(QString path);
+    void loadRandoFile();
 
 
 private slots:
