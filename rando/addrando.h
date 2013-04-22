@@ -33,7 +33,7 @@ private:
     QVector<QLineEdit *> _lineEdits;
     QVector<QLabel *> _labels;
 
-    bool verif();
+    QStringList verif();
 
 private slots:
     void ok();

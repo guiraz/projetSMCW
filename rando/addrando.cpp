@@ -73,8 +73,15 @@ AddRando::~AddRando()
 
 void AddRando::ok()
 {
-    if(verif())
+    QStringList l = verif();
+    if(l.size()==0)
+        close();
+    else
     {
+        QString s;
+        for(int i=0; i<l.size(); i++)
+            s.append(l.at(i)+'\n');
+        QMessageBox::critical(this, "Erreur", s, QMessageBox::Ok);
     }
 }
 
@@ -83,7 +90,395 @@ void AddRando::abort()
     close();
 }
 
-bool AddRando::verif()
+QStringList AddRando::verif()
 {
-    return true;
+    QStringList l;
+
+    QString t = _lineEdits.at(0)->text();
+    if((t.size()<5) || (t.size()>70))
+    {
+        l.append("Le nom doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(0)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(0)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(0)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(0)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(1)->text();
+    if((t.size()<5) || (t.size()>100))
+    {
+        l.append("La situation doit contenir au minimum 5 caractères et au maximum 100 caractères.");
+        _lineEdits.at(1)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(1)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(1)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(1)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(2)->text();
+    if((t.size()<5) || (t.size()>500))
+    {
+        l.append("Le prelude doit contenir au minimum 5 caractères et au maximum 500 caractères.");
+        _lineEdits.at(2)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(2)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(2)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(2)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(3)->text();
+    if((t.size()<5) || (t.size()>2000))
+    {
+        l.append("La description générale doit contenir au minimum 5 caractères et au maximum 2000 caractères.");
+        _lineEdits.at(3)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(3)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(3)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(3)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(4)->text();
+    if((t.size()<5) || (t.size()>2000))
+    {
+        l.append("La description culturelle doit contenir au minimum 5 caractères et au maximum 2000 caractères.");
+        _lineEdits.at(4)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(4)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(4)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(4)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(5)->text();
+    if((t.size()<5) || (t.size()>200))
+    {
+        l.append("Les informations doivent contenir au minimum 5 caractères et au maximum 2000 caractères.");
+        _lineEdits.at(5)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(5)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(5)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(5)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(6)->text();
+    if((t.size()<5) || (t.size()>200))
+    {
+        l.append("Les recommandations doivent contenir au minimum 5 caractères et au maximum 2000 caractères.");
+        _lineEdits.at(6)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(6)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(6)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(6)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(7)->text();
+    if((t!="Facile") && (t!="Moyenne") && (t!="Difficile"))
+    {
+        l.append("Les différentes difficultés sont : 'Facile', 'Moyenne', 'Difficile'. Attention respecter la casse.");
+        _lineEdits.at(7)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+        _lineEdits.at(7)->setStyleSheet("background-color : white;");
+
+
+
+    t = _lineEdits.at(8)->text();
+    QStringList temp = t.split(' ');
+    for(int i = 0; i<temp.size(); i++)
+    {
+        if((temp[i]!="Automne") && (temp[i]!="Hiver") && (temp[i]!="Pringtemps") && (temp[i]!="Ete"))
+        {
+            l.append("Les différentes époques sont : 'Automne', 'Hiver', 'Pringtemps', 'Ete'. Attention a la casse.");
+            _lineEdits.at(8)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+        {
+            _lineEdits.at(8)->setStyleSheet("background-color : white;");
+            for(int j=0; j<i; j++)
+                if(temp[i]==temp[j])
+                {
+                    l.append("Il ne peut y avoir deux fois la même époque.");
+                    _lineEdits.at(8)->setStyleSheet("background-color : #FFC0C0;");
+                }
+                else
+                    _lineEdits.at(8)->setStyleSheet("background-color : white;");
+        }
+    }
+
+
+
+    t = _lineEdits.at(9)->text();
+    if((t.size()<5) || (t.size()>70))
+    {
+        l.append("Le départ doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(9)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(9)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(9)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(9)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(10)->text();
+    if((t.size()<5) || (t.size()>70))
+    {
+        l.append("L'arrivé doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(10)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(10)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(10)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(10)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(11)->text();
+    if((t.size()<5) || (t.size()>70))
+    {
+        l.append("La carte doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(11)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(11)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(11)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(11)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(12)->text();
+    if(!t.contains(QRegExp("[1-9][0-9]{3}[A-Z]{2}")))
+    {
+        l.append("Le carroyage est de type : [1-9][0-9]{3}[A-Z]{2}.");
+        _lineEdits.at(12)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(12)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(12)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(12)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(13)->text();
+    if((t.size()<5) || (t.size()>70))
+    {
+        l.append("Le nom de la carte doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(13)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(13)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(13)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(13)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(14)->text();
+    if((t.size()<5) || (t.size()>200))
+    {
+        l.append("L'accés doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(14)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(14)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(14)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(14)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(15)->text();
+    if((t.size()<5) || (t.size()>200))
+    {
+        l.append("Le parking doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(15)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(15)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(15)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(15)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    t = _lineEdits.at(16)->text();
+    temp = t.split(' ');
+    for(int i = 0; i<temp.size(); i++)
+    {
+        if((temp[i]!="Goudronné") && (temp[i]!="Terre") && (temp[i]!="Balisé") && (temp[i]!="Cairne") && (temp[i]!="HorsSentier"))
+        {
+            l.append("Les différents types de chemin sont : 'Goudronné', 'Terre', 'Balise', 'Cairne', 'HorsSentier'. Attention a la casse.");
+            _lineEdits.at(16)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+        {
+            _lineEdits.at(17)->setStyleSheet("background-color : white;");
+            for(int j=0; j<i; j++)
+                if(temp[i]==temp[j])
+                {
+                    l.append("Il ne peut y avoir deux fois la même époque.");
+                    _lineEdits.at(16)->setStyleSheet("background-color : #FFC0C0;");
+                }
+                else
+                    _lineEdits.at(17)->setStyleSheet("background-color : white;");
+        }
+    }
+
+
+
+    t = _lineEdits.at(17)->text();
+    temp = t.split(' ');
+    for(int i = 0; i<temp.size(); i++)
+    {
+        if((temp[i]!="Agricole") && (temp[i]!="Herbe") && (temp[i]!="Eboulis") && (temp[i]!="Urbaine"))
+        {
+            l.append("Les différents types de terrain sont : 'Agricole', 'Herbe', 'Eboulis', 'Urbaine'. Attention a la casse.");
+            _lineEdits.at(17)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+        {
+            _lineEdits.at(17)->setStyleSheet("background-color : white;");
+            for(int j=0; j<i; j++)
+                if(temp[i]==temp[j])
+                {
+                    l.append("Il ne peut y avoir deux fois la même époque.");
+                    _lineEdits.at(17)->setStyleSheet("background-color : #FFC0C0;");
+                }
+                else
+                    _lineEdits.at(17)->setStyleSheet("background-color : white;");
+        }
+    }
+
+
+
+    t = _lineEdits.at(18)->text();
+    if((t.size()<5) || (t.size()>200))
+    {
+        l.append("Le Matériel doit contenir au minimum 5 caractères et au maximum 70 caractères.");
+        _lineEdits.at(18)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(18)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(18)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(18)->setStyleSheet("background-color : white;");
+    }
+
+
+
+    return l;
 }
