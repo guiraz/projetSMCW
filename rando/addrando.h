@@ -11,6 +11,7 @@
 #include <QVector>
 #include <iostream>
 #include <QScrollArea>
+#include <QFile>
 
 #include "randonnee.h"
 

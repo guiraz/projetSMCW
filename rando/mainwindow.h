@@ -11,10 +11,13 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QtXml>
+#include <QXmlQuery>
+#include <QWebView>
 
 #include "addrando.h"
 #include "addetape.h"
 #include "randonnee.h"
+#include "etape.h"
 
 class MainWindow : public QMainWindow
 {
@@ -30,7 +33,7 @@ private :
     QVBoxLayout * _vLayout1,* _vLayout2;
     QLabel * _label;
     QComboBox * _combo;
-    QPushButton * _buttonQuit, * _buttonAddRando, * _buttonAddEtape;
+    QPushButton * _buttonQuit, * _buttonAddRando, * _buttonAddEtape, * _buttonDelRando, *_buttonTransformation;
     QVector<Randonnee> _rand;
     int _currentRando;
 
@@ -44,6 +47,8 @@ private slots:
     void quit();
     void addRando();
     void addEtape();
+    void delRando();
+    void trans();
     void comboBoxChanged(int text);
     void afficheRando(int index);
 

@@ -61,7 +61,7 @@ QString Etape::getImage()
 
 void Etape::setId(QString id)
 {
-    id = _id;
+    _id = id;
 }
 
 void Etape::setNom(QString nom)

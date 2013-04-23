@@ -29,6 +29,7 @@ AddRando::AddRando(QVector<Randonnee> * rand ,QWidget *parent) :
     _labels.append(new QLabel("Type de chemin :"));
     _labels.append(new QLabel("Type de terrain :"));
     _labels.append(new QLabel("Materiel :"));
+    _labels.append(new QLabel("Image :"));
 
     _lineEdits.clear();
     for(int i=0; i<_labels.size(); i++)
@@ -96,6 +97,7 @@ void AddRando::ok()
         temp.setChemin(_lineEdits.at(16)->text());
         temp.setTerrain(_lineEdits.at(17)->text());
         temp.setMateriel(_lineEdits.at(18)->text());
+        temp.setImage(_lineEdits.at(19)->text());
         _rand->append(temp);
         close();
     }
@@ -499,6 +501,25 @@ QStringList AddRando::verif()
         }
         else
             _lineEdits.at(18)->setStyleSheet("background-color : white;");
+    }
+
+
+    t = _lineEdits.at(19)->text();
+    if(!QFile::exists(t))
+    {
+        l.append("L'image n'existe pas.");
+        _lineEdits.at(19)->setStyleSheet("background-color : #FFC0C0;");
+    }
+    else
+    {
+        _lineEdits.at(19)->setStyleSheet("background-color : white;");
+        if((t.contains('<')) || (t.contains('>')))
+        {
+            l.append("Les chevrons '<' '>' sont interdits.");
+            _lineEdits.at(19)->setStyleSheet("background-color : #FFC0C0;");
+        }
+        else
+            _lineEdits.at(19)->setStyleSheet("background-color : white;");
     }
 
 

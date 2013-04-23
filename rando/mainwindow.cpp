@@ -30,6 +30,14 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(_buttonAddEtape, SIGNAL(clicked()), this, SLOT(addEtape()));
     _vLayout1->addWidget(_buttonAddEtape);
 
+    _buttonDelRando = new QPushButton("Supprimer Randonnée");
+    QObject::connect(_buttonDelRando, SIGNAL(clicked()), this, SLOT(delRando()));
+    _vLayout1->addWidget(_buttonDelRando);
+
+    _buttonTransformation = new QPushButton("Transformation XSLT");
+    QObject::connect(_buttonTransformation, SIGNAL(clicked()), this, SLOT(trans()));
+    _vLayout1->addWidget(_buttonTransformation);
+
     _buttonQuit = new QPushButton("Quitter");
     QObject::connect(_buttonQuit, SIGNAL(clicked()), this, SLOT(quit()));
     _vLayout1->addWidget(_buttonQuit);
@@ -73,14 +81,18 @@ void MainWindow::update()
 
     if(_rand.size()>0)
     {
+        _buttonDelRando->setEnabled(true);
         _buttonAddEtape->setEnabled(true);
+
         _currentRando = 0;
         _combo->setCurrentIndex(_currentRando);
         _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
     }
     else
     {
-        _buttonAddEtape->setDisabled(true);
+        _currentRando = -1;
+        _buttonDelRando->setEnabled(false);
+        _buttonAddEtape->setEnabled(false);
     }
 }
 
@@ -103,23 +115,108 @@ void MainWindow::writeXML(int index)
     dom->setContent(&xml_doc);
 
     QDomElement randonnee = dom->createElement("randonnee");
+
+    /*  Introduction */
     QDomElement introduction = dom->createElement("introduction");
     introduction.setAttribute("titre", "PAS DE CIRCUIT");
     QDomElement nom = dom->createElement("nom");
     QDomElement situation = dom->createElement("situation");
     QDomElement prelude = dom->createElement("prelude");
     QDomElement desc_gen = dom->createElement("description_generale");
+
+    QDomText nomT = dom->createTextNode(_rand[index].getNom());
+    QDomText situationT = dom->createTextNode(_rand[index].getSituation());
+    QDomText preludeT = dom->createTextNode(_rand[index].getPrelude());
+    QDomText desc_genT = dom->createTextNode(_rand[index].getDescGen());
+
+    nom.appendChild(nomT);
+    situation.appendChild(situationT);
+    prelude.appendChild(preludeT);
+    desc_gen.appendChild(desc_genT);
+
+    introduction.appendChild(nom);
+    introduction.appendChild(situation);
+    introduction.appendChild(prelude);
+    introduction.appendChild(desc_gen);
+
+
+    /*Partie Descriptive  */
+    QDomElement partieDesc = dom->createElement("partie");
+    partieDesc.setAttribute("titre", "DESCRIPTION");
+    QDomElement etapes[_rand[index].getEtapes()->size()];
+    QDomElement descEtapes[_rand[index].getEtapes()->size()];
+    QDomText descEtapesT[_rand[index].getEtapes()->size()];
+
+
+    for(int i=0; i<_rand[index].getEtapes()->size(); i++)
+    {
+        etapes[i] = dom->createElement("etape");
+        etapes[i].setAttribute("id",_rand[index].getEtapes()->operator [](i).getId());
+        etapes[i].setAttribute("nom",_rand[index].getEtapes()->operator [](i).getNom());
+        etapes[i].setAttribute("description",_rand[index].getEtapes()->operator [](i).getDesc());
+        etapes[i].setAttribute("distance_a_parcourir",_rand[index].getEtapes()->operator [](i).getDistance());
+        etapes[i].setAttribute("duree_estime",_rand[index].getEtapes()->operator [](i).getDuree());
+        etapes[i].setAttribute("altitude",_rand[index].getEtapes()->operator [](i).getAlt());
+        etapes[i].setAttribute("denivele",_rand[index].getEtapes()->operator [](i).getDeniv());
+        etapes[i].setAttribute("lat",_rand[index].getEtapes()->operator [](i).getLat());
+        etapes[i].setAttribute("long",_rand[index].getEtapes()->operator [](i).getLong());
+        etapes[i].setAttribute("src",_rand[index].getEtapes()->operator [](i).getImage());
+
+        descEtapes[i] = dom->createElement("description_etape");
+        descEtapesT[i] = dom->createTextNode(_rand[index].getEtapes()->operator [](i).getDescEtape());
+
+        descEtapes[i].appendChild(descEtapesT[i]);
+
+        etapes[i].appendChild(descEtapes[i]);
+
+        partieDesc.appendChild(etapes[i]);
+    }
+
+
+    /*  Partie Thematique Culturelle  */
     QDomElement partieCult = dom->createElement("partie");
     partieCult.setAttribute("titre", "THEMATIQUE CULTURELLE");
     QDomElement desc_cult = dom->createElement("description_culturel");
+
+    QDomText desc_cultT = dom->createTextNode(_rand[index].getDescCult());
+
+    desc_cult.appendChild(desc_cultT);
+
+    partieCult.appendChild(desc_cult);
+
+    /*  Fiche Technique  */
     QDomElement fiche_tech = dom->createElement("fichetechnique");
-    QDomElement fiche_info = dom->createElement("ficheinfo");
     QDomElement info = dom->createElement("infos");
     QDomElement reco = dom->createElement("recommandations");
     QDomElement diff = dom->createElement("difficulte");
     QDomElement epoque = dom->createElement("epoque");
     QDomElement depart = dom->createElement("depart");
     QDomElement arrivee = dom->createElement("arrivee");
+
+    QDomText infoT = dom->createTextNode(_rand[index].getInfos());
+    QDomText recoT = dom->createTextNode(_rand[index].getReco());
+    QDomText diffT = dom->createTextNode(_rand[index].getDiff());
+    QDomText epoqueT = dom->createTextNode(_rand[index].getEpoque());
+    QDomText departT = dom->createTextNode(_rand[index].getDepart());
+    QDomText arriveeT = dom->createTextNode(_rand[index].getArrive());
+
+    info.appendChild(infoT);
+    reco.appendChild(recoT);
+    diff.appendChild(diffT);
+    epoque.appendChild(epoqueT);
+    depart.appendChild(departT);
+    arrivee.appendChild(arriveeT);
+
+    fiche_tech.appendChild(info);
+    fiche_tech.appendChild(reco);
+    fiche_tech.appendChild(diff);
+    fiche_tech.appendChild(epoque);
+    fiche_tech.appendChild(depart);
+    fiche_tech.appendChild(arrivee);
+
+
+    /*  Fiche Informative  */
+    QDomElement fiche_info = dom->createElement("ficheinfo");
     QDomElement nomCarte = dom->createElement("nom");
     QDomElement acces = dom->createElement("acces");
     QDomElement parking = dom->createElement("parking");
@@ -129,18 +226,6 @@ void MainWindow::writeXML(int index)
     QDomElement terrain = dom->createElement("typedeterrain");
     QDomElement materiel = dom->createElement("materiel");
 
-
-    QDomText nomT = dom->createTextNode(_rand[index].getNom());
-    QDomText situationT = dom->createTextNode(_rand[index].getSituation());
-    QDomText preludeT = dom->createTextNode(_rand[index].getPrelude());
-    QDomText desc_genT = dom->createTextNode(_rand[index].getDescGen());
-    QDomText desc_cultT = dom->createTextNode(_rand[index].getDescCult());
-    QDomText infoT = dom->createTextNode(_rand[index].getInfos());
-    QDomText recoT = dom->createTextNode(_rand[index].getReco());
-    QDomText diffT = dom->createTextNode(_rand[index].getDiff());
-    QDomText epoqueT = dom->createTextNode(_rand[index].getEpoque());
-    QDomText departT = dom->createTextNode(_rand[index].getDepart());
-    QDomText arriveeT = dom->createTextNode(_rand[index].getArrive());
     QDomText nomCarteT = dom->createTextNode(_rand[index].getnomCarte());
     QDomText accesT = dom->createTextNode(_rand[index].getAcces());
     QDomText parkingT = dom->createTextNode(_rand[index].getParking());
@@ -150,17 +235,6 @@ void MainWindow::writeXML(int index)
     QDomText terrainT = dom->createTextNode(_rand[index].getTerrain());
     QDomText materielT = dom->createTextNode(_rand[index].getMateriel());
 
-    nom.appendChild(nomT);
-    situation.appendChild(situationT);
-    prelude.appendChild(preludeT);
-    desc_gen.appendChild(desc_genT);
-    desc_cult.appendChild(desc_cultT);
-    info.appendChild(infoT);
-    reco.appendChild(recoT);
-    diff.appendChild(diffT);
-    epoque.appendChild(epoqueT);
-    depart.appendChild(departT);
-    arrivee.appendChild(arriveeT);
     nomCarte.appendChild(nomCarteT);
     acces.appendChild(accesT);
     parking.appendChild(parkingT);
@@ -169,20 +243,6 @@ void MainWindow::writeXML(int index)
     chemin.appendChild(cheminT);
     terrain.appendChild(terrainT);
     materiel.appendChild(materielT);
-
-    introduction.appendChild(nom);
-    introduction.appendChild(situation);
-    introduction.appendChild(prelude);
-    introduction.appendChild(desc_gen);
-
-    partieCult.appendChild(desc_cult);
-
-    fiche_tech.appendChild(info);
-    fiche_tech.appendChild(reco);
-    fiche_tech.appendChild(diff);
-    fiche_tech.appendChild(epoque);
-    fiche_tech.appendChild(depart);
-    fiche_tech.appendChild(arrivee);
 
     fiche_info.appendChild(nomCarte);
     fiche_info.appendChild(acces);
@@ -193,7 +253,10 @@ void MainWindow::writeXML(int index)
     fiche_info.appendChild(terrain);
     fiche_info.appendChild(materiel);
 
+
+    /*  Randonnee  */
     randonnee.appendChild(introduction);
+    randonnee.appendChild(partieDesc);
     randonnee.appendChild(partieCult);
     randonnee.appendChild(fiche_tech);
     randonnee.appendChild(fiche_info);
@@ -207,7 +270,6 @@ void MainWindow::writeXML(int index)
 
     xml_doc.close();
 }
-
 
 
 QString MainWindow::loadXMLFile(QString path)
@@ -225,7 +287,6 @@ QString MainWindow::loadXMLFile(QString path)
 
     return s;
 }
-
 
 
 void MainWindow::loadRandoFile()
@@ -247,6 +308,10 @@ void MainWindow::loadRandoFile()
                while(!n.isNull())
                {
                     QDomElement e = n.toElement();
+                    if(e.tagName()=="image")
+                    {
+                        temp.setImage(e.attribute("src"));
+                    }
                     if(e.tagName()=="introduction")
                     {
                         QDomNode introNode = e.firstChild();
@@ -369,13 +434,11 @@ void MainWindow::loadRandoFile()
 }
 
 
-
 void MainWindow::quit()
 {
     if(QMessageBox::warning(this, "Fermeture", "Etes vous sure?", QMessageBox::Ok, QMessageBox::Abort) == QMessageBox::Ok)
         this->close();
 }
-
 
 
 void MainWindow::addRando()
@@ -387,7 +450,6 @@ void MainWindow::addRando()
     writeXML(_rand.size()-1);
     update();
 }
-
 
 
 void MainWindow::addEtape()
@@ -410,6 +472,25 @@ void MainWindow::addEtape()
 }
 
 
+void MainWindow::delRando()
+{
+    QFile::remove(_rand[_currentRando].getNom()+".xml");
+    _rand.remove(_currentRando);
+    update();
+}
+
+
+void MainWindow::trans()
+{
+    QString out;
+    QXmlQuery query(QXmlQuery::XSLT20);
+    query.setFocus(QUrl(_rand[_currentRando].getNom()+".xml"));
+    query.setQuery(QUrl("xmlToHtml.xsl"));
+    query.evaluateTo(&out);
+    QWebView wv;
+    wv.setHtml(out);
+}
+
 
 void MainWindow::comboBoxChanged(int index)
 {
@@ -417,6 +498,7 @@ void MainWindow::comboBoxChanged(int index)
     if(_currentRando >=0)
         _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
 }
+
 
 void MainWindow::afficheRando(int index)
 {

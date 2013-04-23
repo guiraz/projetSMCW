@@ -135,9 +135,9 @@ QStringList AddEtape::verif()
     }
 
     t = _lineEdits.at(2)->text();
-    if(!t.contains(QRegExp("(([1-9][0-9]{0,4})|[0-9]))")))
+    if(!t.contains(QRegExp("(([1-9][0-9]{0,4})|[0-9])")))
     {
-        l.append("La distance doit être de la forme (([1-9][0-9]{4})|[0-9])");
+        l.append("La distance doit être de la forme (([1-9][0-9]{0,4})|[0-9])");
         _lineEdits.at(2)->setStyleSheet("background-color : #FFC0C0;");
     }
     else
