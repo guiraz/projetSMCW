@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(_buttonAddRando, SIGNAL(clicked()), this, SLOT(addRando()));
     _vLayout1->addWidget(_buttonAddRando);
 
+    _buttonAddEtape = new QPushButton("Ajouter Etape");
+    QObject::connect(_buttonAddEtape, SIGNAL(clicked()), this, SLOT(addEtape()));
+    _vLayout1->addWidget(_buttonAddEtape);
+
     _buttonQuit = new QPushButton("Quitter");
     QObject::connect(_buttonQuit, SIGNAL(clicked()), this, SLOT(quit()));
     _vLayout1->addWidget(_buttonQuit);
@@ -39,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     update();
 }
+
+
 
 MainWindow::~MainWindow()
 {
@@ -54,6 +60,8 @@ MainWindow::~MainWindow()
     delete _widgetComboLabel;
 }
 
+
+
 void MainWindow::update()
 {
     _combo->clear();
@@ -63,17 +71,25 @@ void MainWindow::update()
         _combo->addItem(_rand[i].getNom());
     }
 
-    _currentRando = 0;
-
     if(_rand.size()>0)
     {
-        _combo->setCurrentIndex(0);
+        _buttonAddEtape->setEnabled(true);
+        _currentRando = 0;
+        _combo->setCurrentIndex(_currentRando);
         _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
+    }
+    else
+    {
+        _buttonAddEtape->setDisabled(true);
     }
 }
 
+
+
 void MainWindow::writeXML(int index)
 {
+    if(index == -1)
+        return;
 
     QString name = _rand[index].getNom();
     QDomDocument *dom = new QDomDocument(name);
@@ -192,6 +208,8 @@ void MainWindow::writeXML(int index)
     xml_doc.close();
 }
 
+
+
 QString MainWindow::loadXMLFile(QString path)
 {
     QFile xml_doc(path);
@@ -208,6 +226,8 @@ QString MainWindow::loadXMLFile(QString path)
     return s;
 }
 
+
+
 void MainWindow::loadRandoFile()
 {
     QDirIterator dir(".");
@@ -216,12 +236,10 @@ void MainWindow::loadRandoFile()
         QString fileName = dir.next();
         if(fileName.contains(QRegExp(".+\\.xml")))
         {
-            std::cout<<fileName.toStdString()<<std::endl;
             QFile file(fileName);
             if(file.open(QIODevice::ReadWrite))
             {
                Randonnee temp;
-               QVector<Etape> etapes;
                QDomDocument doc("xml_file");
                doc.setContent(&file);
                QDomElement docElement = doc.documentElement();
@@ -263,7 +281,7 @@ void MainWindow::loadRandoFile()
                                 partieNode = partieNode.nextSibling();
                             }
                         }
-                        /*if(e.attribute("titre") == "DESCRIPTION")
+                        if(e.attribute("titre") == "DESCRIPTION")
                         {
                             QDomNode partieNode = e.firstChild();
                             while(!partieNode.isNull())
@@ -272,22 +290,24 @@ void MainWindow::loadRandoFile()
 
                                 if(partieElement.tagName()=="etape")
                                 {
-                                    int index = partieElement.attribute("id").toInt();
-                                    etapes[index].setDescEtape(partieElement.firstChildElement().text());
-                                    etapes[index].setId(partieElement.attribute("id"));
-                                    etapes[index].setNom(partieElement.attribute("nom"));
-                                    etapes[index].setDesc(partieElement.attribute("description"));
-                                    etapes[index].setDistance(partieElement.attribute("distance_a_parcourir"));
-                                    etapes[index].setDuree(partieElement.attribute("duree_estime"));
-                                    etapes[index].setAlt(partieElement.attribute("altitude"));
-                                    etapes[index].setDeniv(partieElement.attribute("denivele"));
-                                    etapes[index].setLat(partieElement.attribute("lat"));
-                                    etapes[index].setLong(partieElement.attribute("long"));
+                                    Etape et;
+                                    et.setDescEtape(partieElement.firstChildElement().text());
+                                    et.setId(partieElement.attribute("id"));
+                                    et.setNom(partieElement.attribute("nom"));
+                                    et.setDesc(partieElement.attribute("description"));
+                                    et.setDistance(partieElement.attribute("distance_a_parcourir"));
+                                    et.setDuree(partieElement.attribute("duree_estime"));
+                                    et.setAlt(partieElement.attribute("altitude"));
+                                    et.setDeniv(partieElement.attribute("denivele"));
+                                    et.setLat(partieElement.attribute("lat"));
+                                    et.setLong(partieElement.attribute("long"));
+                                    et.setImage(partieElement.attribute("src"));
+                                    temp.addEtape(et);
                                 }
 
                                 partieNode = partieNode.nextSibling();
                             }
-                        }*/
+                        }
                     }
                     if(e.tagName()=="fichetechnique")
                     {
@@ -341,8 +361,6 @@ void MainWindow::loadRandoFile()
                     }
                     n = n.nextSibling();
                }
-               for(int i=0; i<etapes.size(); i++)
-                   temp.addEtape(etapes[i]);
                _rand.append(temp);
             }
         }
@@ -374,38 +392,38 @@ void MainWindow::addRando()
 
 void MainWindow::addEtape()
 {
-}
+    Etape temp;
+    AddEtape * ae;
+    ae = new AddEtape(&temp, this);
+    ae->exec();
+    delete ae;
 
-
-
-void MainWindow::delRando()
-{
-    if(_rand.size()>0)
+    if(temp.getNom().size()!=0)
     {
-        QFile::remove(_rand[_currentRando].getNom()+".xml");
-        _combo->removeItem(_currentRando);
-        _rand.remove(_currentRando);
-        update();
+        int id = _rand[_currentRando].getEtapes()->size()+1;
+        temp.setId(QString::number(id));
+        _rand[_currentRando].addEtape(temp);
+        writeXML(_rand.size()-1);
     }
-}
 
-
-
-void MainWindow::delEtape()
-{
+    update();
 }
 
 
 
 void MainWindow::comboBoxChanged(int index)
 {
-    if(index>=0)
-    {
-        _currentRando = index;
+    _currentRando = index;
+    if(_currentRando >=0)
         _textRando->setText(loadXMLFile(_rand[_currentRando].getNom() + ".xml"));
-    }
 }
 
+void MainWindow::afficheRando(int index)
+{
+    std::cout<<_rand[index].getNom().toStdString()<<std::endl;
+    for(int i=0; i<_rand[index].getEtapes()->size(); i++)
+        std::cout<<(_rand[index].getEtapes())->operator [](i).getNom().toStdString()<<std::endl;
+}
 
 
 void MainWindow::resizeEvent(QResizeEvent * event)

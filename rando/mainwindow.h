@@ -13,6 +13,7 @@
 #include <QtXml>
 
 #include "addrando.h"
+#include "addetape.h"
 #include "randonnee.h"
 
 class MainWindow : public QMainWindow
@@ -29,7 +30,7 @@ private :
     QVBoxLayout * _vLayout1,* _vLayout2;
     QLabel * _label;
     QComboBox * _combo;
-    QPushButton * _buttonQuit, * _buttonAddRando;
+    QPushButton * _buttonQuit, * _buttonAddRando, * _buttonAddEtape;
     QVector<Randonnee> _rand;
     int _currentRando;
 
@@ -43,9 +44,8 @@ private slots:
     void quit();
     void addRando();
     void addEtape();
-    void delRando();
-    void delEtape();
     void comboBoxChanged(int text);
+    void afficheRando(int index);
 
 protected:
     void resizeEvent ( QResizeEvent * event );

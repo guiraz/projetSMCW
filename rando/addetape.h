@@ -1,29 +1,27 @@
-#ifndef ADDRANDO_H
-#define ADDRANDO_H
+#ifndef ADDETAPE_H
+#define ADDETAPE_H
 
 #include <QDialog>
-#include <QLineEdit>
+#include <QFile>
+#include <QGridLayout>
 #include <QPushButton>
-#include <QMessageBox>
-#include <QFormLayout>
-#include <QLabel>
-#include <QComboBox>
-#include <QVector>
-#include <iostream>
 #include <QScrollArea>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMessageBox>
 
 #include "randonnee.h"
+#include "etape.h"
 
-class AddRando : public QDialog
+class AddEtape : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AddRando(QVector<Randonnee> * rand ,QWidget *parent = 0);
-    ~AddRando();
+    explicit AddEtape(Etape * etape,QWidget *parent = 0);
+    ~AddEtape();
     
 private:
-
-    QVector<Randonnee> * _rand;
+    Etape * _etape;
 
     QPushButton *_buttonOK, *_buttonAbort;
 
@@ -41,4 +39,4 @@ private slots:
     
 };
 
-#endif // ADDRANDO_H
+#endif // ADDETAPE_H

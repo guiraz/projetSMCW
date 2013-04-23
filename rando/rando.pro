@@ -14,12 +14,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     addrando.cpp \
     randonnee.cpp \
-    etape.cpp
+    etape.cpp \
+    addetape.cpp
 
 HEADERS  += mainwindow.h \
     addrando.h \
     randonnee.h \
-    etape.h
+    etape.h \
+    addetape.h
 
 DESTDIR = $$_PRO_FILE_PWD_
 
