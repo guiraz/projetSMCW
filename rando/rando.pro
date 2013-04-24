@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml xmlpatterns webkit
+QT       += core gui xml xmlpatterns
 
 TARGET = rando
 TEMPLATE = app

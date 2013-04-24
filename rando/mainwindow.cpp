@@ -83,6 +83,7 @@ void MainWindow::update()
     {
         _buttonDelRando->setEnabled(true);
         _buttonAddEtape->setEnabled(true);
+        _buttonTransformation->setEnabled(true);
 
         _currentRando = 0;
         _combo->setCurrentIndex(_currentRando);
@@ -93,6 +94,7 @@ void MainWindow::update()
         _currentRando = -1;
         _buttonDelRando->setEnabled(false);
         _buttonAddEtape->setEnabled(false);
+        _buttonTransformation->setEnabled(false);
     }
 }
 
@@ -115,6 +117,10 @@ void MainWindow::writeXML(int index)
     dom->setContent(&xml_doc);
 
     QDomElement randonnee = dom->createElement("randonnee");
+
+    /*  Image  */
+    QDomElement image = dom->createElement("image");
+    image.setAttribute("src", _rand[index].getImage());
 
     /*  Introduction */
     QDomElement introduction = dom->createElement("introduction");
@@ -255,6 +261,7 @@ void MainWindow::writeXML(int index)
 
 
     /*  Randonnee  */
+    randonnee.appendChild(image);
     randonnee.appendChild(introduction);
     randonnee.appendChild(partieDesc);
     randonnee.appendChild(partieCult);
@@ -482,13 +489,25 @@ void MainWindow::delRando()
 
 void MainWindow::trans()
 {
-    QString out;
-    QXmlQuery query(QXmlQuery::XSLT20);
-    query.setFocus(QUrl(_rand[_currentRando].getNom()+".xml"));
-    query.setQuery(QUrl("xmlToHtml.xsl"));
-    query.evaluateTo(&out);
-    QWebView wv;
-    wv.setHtml(out);
+    if((QFile::exists("html.xsl")) && (QFile::exists(_rand[_currentRando].getNom()+".xml")))
+    {
+        QString out;
+        QXmlQuery query(QXmlQuery::XSLT20);
+        query.setFocus(QUrl(_rand[_currentRando].getNom()+".xml"));
+        query.setQuery(QUrl("html.xsl"));
+        query.evaluateTo(&out);
+
+        if(QFile::exists(_rand[_currentRando].getNom() + ".html"))
+            QFile::remove(_rand[_currentRando].getNom() + ".html");
+
+        QFile file(_rand[_currentRando].getNom() + ".html");
+        file.open(QIODevice::ReadWrite);
+        QTextStream stream(&file);
+        stream << out;
+        file.close();
+
+        QMessageBox::information(this, "Transformation terminée", "La transformation est terminée, le résultat se trouve dans le répertoire courant.", QMessageBox::Ok);
+    }
 }
 
 

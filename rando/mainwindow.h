@@ -12,7 +12,6 @@
 #include <QComboBox>
 #include <QtXml>
 #include <QXmlQuery>
-#include <QWebView>
 
 #include "addrando.h"
 #include "addetape.h"

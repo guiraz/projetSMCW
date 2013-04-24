@@ -1,0 +1,53 @@
+body
+{
+    width : 80%;
+    font : 15px Times New Roman,sans-serif;
+    margin : auto;
+}
+
+#col1
+{
+    width : 30%;
+    background-color : #FFCC33;
+}
+
+#col2
+{
+    width : 15%;
+}
+
+#col3
+{
+    width : 30%;
+    background-color : #FFCC33;
+}
+
+.titreFiche
+{
+    font-weight : bold;
+    background-color : #6699FF;
+    width : 60%;
+}
+
+.fiche
+{
+    vertical-align:top;   
+}
+
+table
+{
+    margin : auto;
+    width : 80%;
+}
+
+h1
+{
+    text-align : center;
+}
+
+#imgRando
+{
+    width : 80%;
+    display:block;
+    margin:auto;
+}
